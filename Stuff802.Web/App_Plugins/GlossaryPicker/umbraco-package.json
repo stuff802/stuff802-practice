@@ -1,0 +1,20 @@
+{
+    "name": "Glossary Picker",
+    "alias": "Stuff802.GlossaryPicker",
+    "version": "1.0.0",
+    "extensions": [
+        {
+            "type": "tiptapToolbarExtension",
+            "kind": "button",
+            "alias": "Stuff802.GlossaryPicker.ToolbarButton",
+            "name": "Glossary Picker Toolbar Button",
+            "js": "/App_Plugins/GlossaryPicker/dist/glossary-picker.js",
+            "forExtensions": [],
+            "meta": {
+                "alias": "glossaryPicker",
+                "icon": "icon-book-alt",
+                "label": "Glossary Link"
+            }
+        }
+    ]
+}

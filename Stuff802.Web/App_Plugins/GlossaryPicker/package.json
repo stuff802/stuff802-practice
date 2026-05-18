@@ -1,0 +1,14 @@
+{
+    "name": "glossary-picker",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite build --watch"
+    },
+    "devDependencies": {
+        "@umbraco-cms/backoffice": "*",
+        "typescript": "*",
+        "vite": "*"
+    }
+}
