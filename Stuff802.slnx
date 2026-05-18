@@ -1,8 +1,4 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Stuff802.Core/Stuff802.Core.csproj" />
-    <Project Path="src/Stuff802.Models/Stuff802.Models.csproj" />
-  </Folder>
   <Project Path="Stuff802.Core/Stuff802.Core.csproj" />
   <Project Path="Stuff802.Models/Stuff802.Models.csproj" />
   <Project Path="Stuff802.Web/Stuff802.Web.csproj" />

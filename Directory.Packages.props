@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="OpenIddict.Abstractions" Version="7.2.0" />
+    <PackageVersion Include="Umbraco.Cms" Version="17.3.5" />
+    <PackageVersion Include="Umbraco.Cms.Core" Version="17.3.5" />
+    <PackageVersion Include="Umbraco.Cms.Infrastructure" Version="17.3.5" />
+    <PackageVersion Include="Umbraco.Cms.DevelopmentMode.Backoffice" Version="17.3.5" />
+    <PackageVersion Include="Microsoft.ICU.ICU4C.Runtime" Version="72.1.0.3" />
+    <PackageVersion Include="uSync" Version="17.3.2" />
+  </ItemGroup>
+</Project>
