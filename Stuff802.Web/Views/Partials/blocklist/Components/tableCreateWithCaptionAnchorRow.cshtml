@@ -1,0 +1,37 @@
+﻿@using System.Text.RegularExpressions
+@inherits UmbracoViewPage<BlockListItem>
+@{
+    var pageModel = Umbraco.AssignedContentItem;
+    var row = (TableCreateWithCaptionAnchorRow)Model.Content;
+    var settings = (TableCreateWithCaptionAnchorRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+    string tableTitle = row?.Caption?.Trim() ?? string.Empty;
+    string anchorName = row?.AnchorName?.Trim() ?? string.Empty;
+    var anchorId = string.Empty;
+
+    if (!string.IsNullOrWhiteSpace(anchorName) && !string.IsNullOrEmpty(tableTitle))
+    {
+        // Generate anchor ID from anchor name by removing non-alphanumeric characters (except spaces and hyphens) and replacing spaces with hyphens
+        anchorId = Regex.Replace(Regex.Replace(anchorName, @"[^a-zA-Z0-9 -]", ""), @"\s+", "-");
+    }
+}
+
+<div class="container">
+    @if (!string.IsNullOrWhiteSpace(tableTitle))
+    {
+        if (anchorId != string.Empty)
+        {
+            <p id="@anchorId-table-caption" class="table-caption">
+                <strong>
+                    @tableTitle
+                </strong>
+            </p>
+        }
+        else
+        {
+            <p class="table-caption"><strong>@tableTitle</strong></p>
+        }
+    }
+
+    @Html.Raw(@row?.Table)
+</div>

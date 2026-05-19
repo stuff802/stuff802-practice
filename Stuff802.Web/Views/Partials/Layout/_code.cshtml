@@ -1,0 +1,81 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<DesignCode>
+@{
+    var developmentScales = Model.DevelopmentScales ?? Array.Empty<string>();
+    string parentBckColorScheme = ViewBag.BckColorScheme ?? "";
+    string fontColor = ViewBag.FontColor ?? "";
+    bool hasImages = (Model.Images != null && Model.Images.Any());
+    string mb = hasImages ? "mb-2" : "mb-5";
+}
+<div class="row gy-5 g-lg-5 @mb">
+    <div class="col-lg-12">
+        <div class="admissions-requirements aos-init aos-animate" data-aos="fade-up">
+            <div class="requirements-list mt-4">
+                <div class="requirement-item aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <div class="col-lg-12">
+                        <div class="row d-flex flex-column-reverse">
+                            <div class="col-lg-5"> <h2>@Model.Title</h2></div>
+
+                            @if (developmentScales.Any())
+                            {
+                                string[] scaleFilters = ["householder applications", "minor residential applications (1-9 homes)", "major residential applications (10+ homes)", "minor employment applications", "major employment applications", "other major applications"];
+
+                                <div class="col-lg-7">
+                                    <div class="development-code-icon d-flex" role="group" aria-label="Applicable development scales and types">
+                                        @foreach (var code in scaleFilters)
+                                        {
+                                            if (developmentScales.Contains(code, StringComparer.OrdinalIgnoreCase))
+                                            {
+                                                switch (code.ToLower())
+                                                {
+                                                    case "householder applications":
+                                                        <div class="icon-box" style="background-color:@parentBckColorScheme;color:@fontColor">
+                                                            <i class="bi bi-house-heart" role="img" title="@code" aria-label="@code"></i>
+                                                        </div>
+                                                        break;
+                                                    case "minor residential applications (1-9 homes)":
+                                                        <div class="icon-box" style="background-color:@parentBckColorScheme;color:@fontColor">
+                                                            <i class="bi bi-house-add" role="img" title="@code" aria-label="@code"></i>
+                                                        </div>
+                                                        break;
+                                                    case "major residential applications (10+ homes)":
+                                                        <div class="icon-box" style="background-color:@parentBckColorScheme;color:@fontColor">
+                                                            <i class="bi bi-houses-fill" role="img" title="@code" aria-label="@code"></i>
+                                                        </div>
+                                                        break;
+                                                    case "minor employment applications":
+                                                        <div class="icon-box" style="background-color:@parentBckColorScheme;color:@fontColor">
+                                                            <i class="bi bi-building-fill" role="img" title="@code" aria-label="@code"></i>
+                                                        </div>
+                                                        break;
+                                                    case "major employment applications":
+                                                        <div class="icon-box" style="background-color:@parentBckColorScheme;color:@fontColor">
+                                                            <i class="bi bi-buildings-fill" role="img" title="@code" aria-label="@code"></i>
+                                                        </div>
+                                                        break;
+                                                    case "other major applications":
+                                                        <div class="icon-box" style="background-color:@parentBckColorScheme;color:@fontColor">
+                                                            <i class="bi bi-card-list" role="img" title="@code" aria-label="@code"></i>
+                                                        </div>
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                @Model.Description
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.Images != null && Model.Images.Any())
+{
+    <div class="row g-lg-2 mb-5">
+        @Html.WMDCGetBlockListHtml(Model.Images)
+    </div>
+}

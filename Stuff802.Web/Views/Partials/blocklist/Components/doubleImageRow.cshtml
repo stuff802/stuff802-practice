@@ -1,0 +1,38 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits UmbracoViewPage<BlockListItem>
+@{
+    var row = (DoubleImageRow)Model.Content;
+    var settings = (DoubleImageRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+    string documentType = Umbraco.AssignedContentItem.ContentType.Alias;
+    string startElements = documentType == "subContentWithLeftNavPage" ? "<div class=\"container\"><div class=\"row\">" : string.Empty;
+    string endElements = documentType == "subContentWithLeftNavPage" ? "</div></div>" : string.Empty;
+}
+@Html.Raw(startElements)
+<div class="col-md-6">
+    <div class="about-image">
+        <img src="@row.Image1.MediaUrl()" alt="@row.AltText1" class="img-fluid rounded">
+    </div>
+    @if (!string.IsNullOrEmpty(row.Caption1))
+    {
+        <p>@row.Caption1</p>
+    }
+</div>
+
+<div class="col-md-6">
+    <div class="about-image">
+        <img src="@row.Image2.MediaUrl()" alt="@row.AltText2" class="img-fluid rounded">
+    </div>
+    @if (!string.IsNullOrEmpty(row.Caption2))
+    {
+        <p>@row.Caption2</p>
+    }
+</div>
+
+@if (!row.Description.IsNullOrWhiteSpace())
+{
+    <div class="col-md-12">
+        @Html.Raw(@row.Description)
+    </div>
+}
+@Html.Raw(endElements)

@@ -1,0 +1,102 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inject IHttpContextAccessor _contextAccessor
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<TopicPage>
+@{
+    Layout = "webBase.cshtml";
+    var parent = Model.Parent;
+    var parentTitle = Model.Parent.Value<string>("pageTitle") ?? Model.Parent.Name;
+    HttpContext? _context = _contextAccessor?.HttpContext ?? null;
+    var scaleFilter = _context?.Session?.GetScaleFilter<string>("scaleFilter") ?? "";
+    var children = Model.Children<SubTopicPage>().Where(x => x.Value<bool>("hideFromNavigation") != true && (scaleFilter.IsNullOrWhiteSpace() || x.DescendantsOrSelf<DesignCode>().Any(y => y.Value<IEnumerable<string>>("developmentScales") != null && y.Value<IEnumerable<string>>("developmentScales").Contains(scaleFilter, StringComparer.OrdinalIgnoreCase)))).OrderBy(z => z.SortOrder);
+    string parentBckColorScheme = "";
+
+    ChapterPage chapterPage = Model.AncestorOrSelf<ChapterPage>();
+
+    if (chapterPage != null)
+    {
+        string schema = chapterPage.PickChapterSchema.ToLower();
+        switch (schema)
+        {
+            case "strengthening character and context (purple)":
+                parentBckColorScheme = "#955ba3";
+                break;
+            case "sustainable and resilient places (green)":
+                parentBckColorScheme = "#207a72";
+                break;
+            case "welcoming places (pink)":
+                parentBckColorScheme = "#a30c46";
+                break;
+            case "streets for people (blue)":
+                parentBckColorScheme = "#005387";
+                break;
+            case "healthy and inclusive homes (orange)":
+                parentBckColorScheme = "#be5835";
+                break;
+            case "attractive places to work (gold)":
+                parentBckColorScheme = "#8e7311";
+                break;
+            default:
+                parentBckColorScheme = string.Empty;
+                break;
+        }
+    }
+
+    var blockListItems = Model.LocalPolicyLinks as IEnumerable<BlockListItem>;
+}
+
+<section id="blog-details" class="blog-details section">
+    <div class="container" data-aos="fade-up">
+
+        <article class="article">
+            <div class="article-wrapper">
+                <aside class="table-of-contents " data-aos="fade-left">
+                    @if (children.Any())
+                    {
+                        <div class="mb-4">
+                            <a class="leftNavH3Heading" href="@parent.Url()" title="@parentTitle">@parentTitle</a>
+                        </div>
+                        <nav class="mb-4">
+                            <ul>
+                                @foreach (var child in children)
+                                {
+                                    string childPreviewTitle = !string.IsNullOrWhiteSpace(child.Value<string>("previewTitle")) ? child.Value<string>("previewTitle") : child.Name;
+                                    <li><a href="@child.Url()">@childPreviewTitle</a></li>
+                                }
+                            </ul>
+                        </nav>
+                    }
+
+                    @if (blockListItems != null && blockListItems.Count() > 0)
+                    {
+                        <div class="leftNavExternalLinks">@Model.LocalPolicyTitle</div>
+                        <nav>
+                            <ul class="externallinks">
+                                @* @Html.GetBlockListHtml(Model.LocalPolicyLinks) *@
+                                @foreach (var item in Model?.LocalPolicyLinks)
+                                {
+                                    var row = (LocalLinksRow)item.Content;
+                                    string anchorTarget = @row.OpenUrlInNewWindow ? "_blank" : "_self";
+                                    <li><a href="@row.Url" target="@anchorTarget">@row.Title</a></li>
+
+                                }
+                            </ul>
+                        </nav>
+                    }
+                </aside>
+                <div class="article-content">
+                    <div class="content-section" id="flat-design" data-aos="fade-up">
+                        @if (scaleFilter != string.Empty)
+                        {
+                            <div class="p-2">
+                                <partial name="/Views/Partials/Layout/_scaleFilter.cshtml" />
+                            </div>
+                        }
+                        <h1 class="title-text-padding">@Model.PageTitle</h1>
+
+                        @Html.GetBlockListHtml(Model.MainContent)
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>

@@ -1,0 +1,57 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var siteSettings = Model.Root().Siblings<SiteSettings>().FirstOrDefault();
+}
+
+<footer id="footer" class="footer position-relative dark-background">
+    <div class="container py-5">
+        <div class="row gy-4">
+            <div class="col-lg-6 col-md-6 footer-about">
+                <div class="footer-contact">
+                    <p>Burton Street</p>
+                    <p>Wakefield, WF1 2EB</p>
+                    <p class="mt-3"><strong>Phone:</strong> <span>0345 8 506 506</span></p>
+                    <p><strong>Email:</strong> <span>WDLP@wakefield.gov.uk</span></p>
+                </div>
+                <div class="social-links d-flex mt-4">
+                    @if (siteSettings is not null && (siteSettings.LinkedInLink is not null || siteSettings.FacebookLink is not null || siteSettings.InstagramLink is not null || siteSettings.XLink is not null))
+                    {
+                        @if (!string.IsNullOrEmpty(siteSettings.XLink))
+                        {
+                            <a href="@siteSettings.XLink"><i class="bi bi-twitter-x"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(siteSettings.FacebookLink))
+                        {
+                            <a href="@siteSettings.FacebookLink"><i class="bi bi-facebook"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(siteSettings.InstagramLink))
+                        {
+                            <a href="@siteSettings.InstagramLink"><i class="bi bi-instagram"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(siteSettings.LinkedInLink))
+                        {
+                            <a href="@siteSettings.LinkedInLink"><i class="bi bi-linkedin"></i></a>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 footer-links">
+                @if(siteSettings?.OtherLinks?.Any() == true)
+                {
+                    var count = 0;
+                    <div class="other-links">
+                        @foreach (var link in siteSettings.OtherLinks)
+                        {
+                            var marginTop = count == 0 ? "" : "mt-2";
+                            <a href="@link.Url" target="@link.Target" class="d-block pt-1 pb-1 @marginTop">@link.Name</a>
+                            count++;
+                        }
+                    </div>
+                }
+            </div>
+            <div class="col-lg-3 col-md-3 footer-links">
+                <img src="/img/LocalPlan_2036_wmdc_white.png" alt="Wakefield Council Local Plan 2036">
+            </div>
+        </div>
+    </div>
+</footer>

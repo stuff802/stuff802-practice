@@ -5,6 +5,7 @@ using Umbraco.Cms.Core.PublishedCache;
 using Umbraco.Cms.Core.Routing;
 using Umbraco.Cms.Core.Services.Navigation;
 using Umbraco.Cms.Core.Web;
+using Stuff802.Core.Interfaces;
 
 namespace Stuff802.Core.Services;
 

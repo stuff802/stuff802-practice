@@ -1,0 +1,41 @@
+﻿@inherits UmbracoViewPage<BlockListItem>
+@{
+    var row = (EngagementCardItemRow)Model.Content;
+    var settings = (EngagementCardItemRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+    var engagementItems = row.EngagementItems
+    .Where(x => x.Content.Value("cardUrl") != null)
+    .OrderBy(x => x.Content.Value<int>("previewOrder"));
+}
+<section id="alumni" class="alumni">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="alumni-engagement">
+            <div class="engagement-cards">
+                <div class="row"> 
+                    @foreach (var item in engagementItems)
+                    {
+                        var engagementItem = (EngagementCardItem)item.Content;
+                        var engagementItemSettings = (EngagementCardItemSettings)item.Settings;
+                        if (engagementItemSettings?.Hide?? false) continue;
+                        if (engagementItem.CardUrl == null || string.IsNullOrWhiteSpace(engagementItem.CardUrl.ToString()) || !engagementItem.CardUrl.IsPublished() || !engagementItem.CardUrl.IsVisible()) continue;
+                        
+                        string title = !string.IsNullOrWhiteSpace(engagementItem.PreviewTitle) ? engagementItem.PreviewTitle : "";
+                        string previewIcon = !string.IsNullOrWhiteSpace(engagementItem.PreviewIconCode) ? engagementItem.PreviewIconCode : "";
+                        string previewDescription = !string.IsNullOrWhiteSpace(engagementItem.PreviewShortDescription) ? engagementItem.PreviewShortDescription : "";
+                        <div class="col-lg-4 col-md-6 mb-3" data-aos="fade-up" data-aos-delay="300">
+                            <a href="@engagementItem.CardUrl.Url()">
+                                <div class="engagement-card">
+                                    <div class="card-icon">
+                                        <i class="@previewIcon"></i>
+                                    </div>
+                                    <div class="engagementcard-heading">@title</div>
+                                    @previewDescription
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,97 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inject IHttpContextAccessor _contextAccessor
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ChapterPage>
+@{
+    Layout = "webBase.cshtml";
+    HttpContext? _context = _contextAccessor?.HttpContext ?? null;
+    var scaleFilter = _context?.Session?.GetScaleFilter<string>("scaleFilter") ?? "";
+    var children = Model.Children<TopicPage>().Where(x => x.Value<bool>("hideFromNavigation") != true && (scaleFilter.IsNullOrWhiteSpace() || x.DescendantsOrSelf<DesignCode>().Any(y => y.Value<IEnumerable<string>>("developmentScales") != null && y.Value<IEnumerable<string>>("developmentScales").Contains(scaleFilter, StringComparer.OrdinalIgnoreCase)))).OrderBy(z=>z.SortOrder);
+    string parentBckColorScheme = "";
+
+    ChapterPage chapterPage = Model.AncestorOrSelf<ChapterPage>();
+
+    if (chapterPage != null)
+
+    {
+        string schema = chapterPage.PickChapterSchema.ToLower();
+        switch (schema)
+        {
+            case "strengthening character and context (purple)":
+                parentBckColorScheme = "#955ba3";
+                break;
+            case "sustainable and resilient places (green)":
+                parentBckColorScheme = "#207a72";
+                break;
+            case "welcoming places (pink)":
+                parentBckColorScheme = "#a30c46";
+                break;
+            case "streets for people (blue)":
+                parentBckColorScheme = "#005387";
+                break;
+            case "healthy and inclusive homes (orange)":
+                parentBckColorScheme = "#be5835";
+                break;
+            case "attractive places to work (gold)":
+                parentBckColorScheme = "#8e7311";
+                break;
+            default:
+                parentBckColorScheme = string.Empty;
+                break;
+        }
+
+    }
+}
+
+<section id="alumni" class="alumni sectionchapterpage">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="impact-banner" data-aos="fade-up" data-aos-delay="200">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="impact-content">
+                        <h1>@Model.Title</h1>
+                        @Model.Content
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="impact-image">
+                        <img src="@Model.ImagePicker.MediaUrl()" alt="@Model.ImageAltText" class="img-fluid">
+                        <p>@Model.Caption</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (children.Any())
+        {
+            <div class="alumni-engagement">
+                @if (scaleFilter != string.Empty)
+                {
+                    <partial name="/Views/Partials/Layout/_scaleFilter.cshtml" />
+                }
+
+                <div class="engagement-cards">
+                    <div class="row">
+                        @foreach (var child in children.OrderBy(x => x.Value<int>("previewOrder")))
+                        {
+                            string childPreviewTitle = !string.IsNullOrWhiteSpace(child.Value<string>("previewTitle")) ? child.Value<string>("previewTitle") : child.Name;
+                            string childPreviewIcon = !string.IsNullOrWhiteSpace(child.Value<string>("previewIconCode")) ? child.Value<string>("previewIconCode") : child.Name;
+                            string childPreviewDescription = !string.IsNullOrWhiteSpace(child.Value<string>("previewShortDescription")) ? child.Value<string>("previewShortDescription") : child.Name;
+
+                            <div class="col-lg-3 col-md-6 mt-3" data-aos="fade-up" data-aos-delay="300">
+                                <a href="@child.Url()">
+                                    <div class="engagement-card">
+                                        <div class="card-icon" style="background-color:@parentBckColorScheme; color:white;">
+                                            <i class="@childPreviewIcon"></i>
+                                        </div>
+                                        <h2>@childPreviewTitle</h2>
+                                        <p>@childPreviewDescription</p>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section><!-- /Alumni Section -->

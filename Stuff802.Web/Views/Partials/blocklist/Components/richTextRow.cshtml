@@ -1,0 +1,27 @@
+﻿
+@inherits UmbracoViewPage<BlockListItem>
+@{
+    var pageModel = Umbraco.AssignedContentItem;
+    var designCodeList = pageModel.Children().Where(x => x.ContentType.Alias == "designCodeList").ToList();
+    var row = (RichTextRow)Model.Content;
+    var contentTitle = row?.Title?.Trim() ?? string.Empty;
+}
+
+
+<div class="container richtext">
+    @if (!string.IsNullOrWhiteSpace(contentTitle))
+    {
+        <div class="content-section-title ">
+            @if (designCodeList!=null &&  designCodeList.Count > 0)
+            {
+                <h5>@contentTitle</h5>
+            }
+            else
+            {
+                <h3>@contentTitle</h3>
+            }
+        </div>
+    }
+
+    @row?.Content
+</div>

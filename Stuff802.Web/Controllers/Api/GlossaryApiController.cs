@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Stuff802.Core.Services;
+using Stuff802.Core.Interfaces;
 
 namespace Stuff802.Web.Controllers.Api;
 

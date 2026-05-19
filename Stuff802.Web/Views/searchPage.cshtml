@@ -1,0 +1,73 @@
+﻿@using Stuff802.Core.Models
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<SearchResultsModel>
+@{
+    Layout = "webBase.cshtml";
+    if (Model == null) return;
+}
+
+<section class="sectioncontentpage">
+    <input id="totalResults" type="hidden" value="@Model.TotalItemCount" />
+    <input id="searchTerm" type="hidden" value="@Model.SearchTerm" />
+
+    <div class="container text-center mt-5">
+        <h1>Search Results</h1>
+    </div>
+
+    <div class="container mt-4">
+
+        @if (Model.HasResults && Model.DisplayResults)
+        {
+            <p class="mb-3 text-center">
+                Your search for <strong>@Model.SearchTerm</strong> returned the following results:
+            </p>
+
+            <nav aria-label="Results navigation">
+                <ul class="search-pagination u-mt-2">
+                    @Model.RenderPagination
+                </ul>
+            </nav>
+
+            <div id="search-results" class="search-results u-mt-5">
+                @foreach (var result in Model.SearchResults)
+                {
+                    <div class="d-flex mb-3">
+                        <div class="flex-grow-1">
+                            <a href="@result.Link" class="search-title">@result.Title</a>
+
+                            @if (!string.IsNullOrWhiteSpace(result.Breadcrumb))
+                            {
+                                <div class="d-block search-breadcrumb small opacity-50">@result.Breadcrumb</div>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(result.Summary))
+                            {
+                                <p>@result.Summary</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <nav aria-label="Results navigation">
+                <ul class="search-pagination u-mt-2">
+                    @Model.RenderPagination
+                </ul>
+            </nav>
+        }
+
+        @if (!Model.HasResults && !string.IsNullOrWhiteSpace(Model.SearchTerm) && !Model.HasErrors)
+        {
+            <p class="mt-1 mb-3">
+                Your search for <strong>@Model.SearchTerm</strong> returned no results.
+            </p>
+        }
+
+        @if (Model.HasErrors)
+        {
+            <div class="container" style="margin-top: 15px; margin-bottom: 30px">
+                <p>There was an error while fetching the results. Please contact the technical team.</p>
+            </div>
+        }
+    </div>
+</section>

@@ -1,0 +1,14 @@
+﻿@inherits UmbracoViewPage<BlockListItem>
+@{
+    var row = (TableCreateRow)Model.Content;
+    var settings = (TableCreateRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+}
+
+<div class="container">
+    <p class="table-caption"><strong>@row?.Caption</strong></p>
+    @Html.Raw(row?.Table)
+</div>
+
+
+

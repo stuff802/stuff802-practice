@@ -1,0 +1,30 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits UmbracoViewPage<BlockListItem>
+@{
+    var row = (TextWithImageBannerRow)Model.Content;
+    var settings = (TextWithImageBannerRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+    string contentTitle = row.Title?.Trim() ?? string.Empty;
+}
+<div id="alumni" class="alumni">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="impact-banner-image" data-aos="fade-up" data-aos-delay="200">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="impact-content">
+                        <h3>
+                            @contentTitle
+                        </h3>
+                        @row.Content
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="impact-image">
+                        <img src="@row.ImagePicker.MediaUrl()" alt="@row.ImageAltText" class="img-fluid">
+                        <p>@row.Caption</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

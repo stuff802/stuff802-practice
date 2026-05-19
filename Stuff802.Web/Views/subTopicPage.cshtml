@@ -1,0 +1,117 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inject IHttpContextAccessor _contextAccessor
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<SubTopicPage>
+@{
+    Layout = "webBase.cshtml";
+    HttpContext? _context = _contextAccessor?.HttpContext ?? null;
+    var scaleFilter = _context?.Session?.GetScaleFilter<string>("scaleFilter") ?? "";
+    var pageTitle = Model.Value<string>("pageTitle") ?? Model.Name;
+    var parent = Model.Parent;
+    var parentTitle = Model.Parent.Value<string>("pageTitle") ?? Model.Parent.Name;
+    var siblings = Model.Siblings().Where(x => x.Value<bool>("hideFromNavigation") != true && (scaleFilter.IsNullOrWhiteSpace() || x.DescendantsOrSelf<DesignCode>().Any(y => y.Value<IEnumerable<string>>("developmentScales") != null && y.Value<IEnumerable<string>>("developmentScales").Contains(scaleFilter, StringComparer.OrdinalIgnoreCase)))).OrderBy(z => z.SortOrder);
+    var designCodes = Model.Children<DesignCode>().Where(x => x.Value<bool>("hideFromNavigation") != true && (scaleFilter.IsNullOrWhiteSpace() || x.DescendantsOrSelf<DesignCode>().Any(y => y.Value<IEnumerable<string>>("developmentScales") != null && y.Value<IEnumerable<string>>("developmentScales").Contains(scaleFilter, StringComparer.OrdinalIgnoreCase)))).OrderBy(z => z.SortOrder).ToArray<IPublishedContent>();
+    var designCodeList = Model.Children<DesignCodeList>().Where(x => x.Value<bool>("hideFromNavigation") != true).ToArray<IPublishedContent>();
+    var combined = designCodes.Concat(designCodeList).OrderBy(x=>x.SortOrder).ToArray<IPublishedContent>();
+    ChapterPage? chapterPage = Umbraco?.AssignedContentItem?.AncestorOrSelf<ChapterPage>(3) ?? null;
+    string parentBckColorScheme = "";
+    string fontColor = "";
+
+    if (chapterPage != null)
+    {
+        string schema = chapterPage.PickChapterSchema?.ToLower() ?? "";
+        switch (schema)
+        {
+            case "strengthening character and context (purple)":
+                parentBckColorScheme = "#955ba3";
+                fontColor = "White";
+                break;
+            case "sustainable and resilient places (green)":
+                parentBckColorScheme = "#207a72";
+                fontColor = "White";
+                break;
+            case "welcoming places (pink)":
+                parentBckColorScheme = "#a30c46";
+                fontColor = "White";
+                break;
+            case "streets for people (blue)":
+                parentBckColorScheme = "#005387";
+                fontColor = "White";
+                break;
+            case "healthy and inclusive homes (orange)":
+                parentBckColorScheme = "#be5835";
+                fontColor = "White";
+                break;
+            case "attractive places to work (gold)":
+                parentBckColorScheme = "#8e7311";
+                fontColor = "White";
+                break;
+            default:
+                parentBckColorScheme = string.Empty;
+                fontColor = string.Empty;
+                break;
+        }
+    }
+
+    ViewBag.BckColorScheme = parentBckColorScheme;
+    ViewBag.FontColor = fontColor;
+}
+
+<section id="blog-details" class="blog-details section">
+    <div class="container" data-aos="fade-up">
+        <article class="article">
+            <div class="article-wrapper">
+                <aside class="table-of-contents" data-aos="fade-left">
+                    <div class="mb-4"> <a class="leftNavH3Heading" href="@parent.Url()" title="@parentTitle">@parentTitle</a></div>
+                    @if (siblings.Any())
+                    {
+                        <nav>
+                            <ul>
+                                @foreach (var item in siblings)
+                                {
+                                    var title = item.Value<string>("pageTitle") ?? item.Name;
+                                    <li class="@(item.Id == Model.Id ? "active" : "")">
+                                        <a href="@item.Url()" title="@title">
+                                            @title
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    }
+                </aside>
+
+                <div class="article-content">
+                    <div class="content-section " id="flat-design" data-aos="fade-up">
+                        @if (scaleFilter != string.Empty)
+                        {
+                            <partial name="/Views/Partials/Layout/_scaleFilter.cshtml" />
+                        }
+                        <h1 class="title-text-padding mb-4">@pageTitle</h1>
+
+                        @if (combined.Any())
+                        {
+                            <section id="admissions" class="admissions sectiondesign">
+                                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                                    <!-- Design codes, Guidance & Advice -->
+                                    @foreach (IPublishedContent code in combined)
+                                    {
+                                        {
+                                            if (code.ContentType.Alias == "designCode")
+                                            {
+                                                await Html.RenderPartialAsync("/Views/Partials/Layout/_code.cshtml", (DesignCode)code);
+                                            }
+                                            else if (code.ContentType.Alias == "designCodeList")
+                                            {
+                                                await Html.RenderPartialAsync("/Views/Partials/Layout/_designCodeList.cshtml", (DesignCodeList)code);
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </section>
+                        }
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>

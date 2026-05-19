@@ -1,0 +1,9 @@
+﻿@inherits UmbracoViewPage<BlockListItem>
+@{
+     var row = (LocalLinksRow)Model.Content;
+    var settings = (LocalLinksRowSettings)Model.Settings;
+     if (settings?.Hide ?? false) { return; }
+    string anchorTarget = @row.OpenUrlInNewWindow ? "_blank" : "_self";
+}
+
+<li><a href="@row.Url" target="@anchorTarget">@row.Title</a></li>

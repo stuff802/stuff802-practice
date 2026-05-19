@@ -1,3 +1,4 @@
+using Stuff802.Core.Interfaces;
 using Stuff802.Core.Services;
 using Umbraco.Cms.Core.Composing;
 

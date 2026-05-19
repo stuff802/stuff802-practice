@@ -1,0 +1,39 @@
+﻿@inherits UmbracoViewPage<BlockListItem>
+@{
+    var row = (AboutHomeRow)Model.Content;
+    var settings = (AboutHomeRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+}
+
+<section id="about" class="about">
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row mission-vision-row g-4">
+            @foreach (var item in @row.AboutHomeItems)
+            {
+                var aboutHomeItem = (AboutHomeItem)item.Content;
+                var aboutHomeSettings = (AboutHomeItemSettings)item.Settings;
+                var Url = aboutHomeItem.Url?.Url() ?? "#";
+                var iconTag = aboutHomeItem.IconHtmlTag;
+                string contentTitle = aboutHomeItem.Title?.Trim() ?? string.Empty;
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <a href="@Url">
+                        <div class="value-card h-100">
+
+                            <div class="card-icon">
+                                @Html.Raw(iconTag)
+                            </div>
+                            <h2>@contentTitle</h2>
+                            @aboutHomeItem.Content
+
+                        </div>
+                    </a>
+                </div>
+
+            }
+        </div>
+
+    </div>
+
+</section>

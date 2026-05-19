@@ -1,0 +1,53 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@inject IHttpContextAccessor _contextAccessor
+@{
+    HttpContext? _context = _contextAccessor?.HttpContext ?? null;
+    var scaleFilter = _context?.Session?.GetScaleFilter<string>("scaleFilter") ?? "";
+    string chapterListUrl = Model?.Root()?.DescendantOrSelf<ChapterList>()?.Url() ?? "#";
+   
+    string areaColour = "";
+
+    switch (scaleFilter)
+    {
+        case "householder application":
+        case "householder applications":
+            areaColour = "#955BA3";
+            break;
+        case "minor residential application (1-9 units)":
+        case "minor residential applications (1-9 homes)":
+            areaColour = "#207A72";
+            break;
+        case "medium & major residential applications (10+ units)":
+        case "major residential applications (10+ homes)":
+            areaColour = "#A30C46";
+            break;
+        case "minor employment application":
+        case "minor employment applications":
+            areaColour = "#005387";
+            break;
+        case "major employment application":
+        case "major employment applications":
+            areaColour = "#BE5835";
+            break;
+        case "other":
+        case "other major applications":
+            areaColour = "#8E7311";
+            break;
+    }
+}
+
+@if (scaleFilter != string.Empty)
+{
+    <div class="card mb-3">
+        <div class="card-header">
+            <svg aria-hidden="true" class="bd-placeholder-img rounded me-2" height="20" preserveAspectRatio="xMidYMid slice" width="20" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="@areaColour"></rect></svg>
+            Development Scale and Type Applied
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                You are currently viewing content filtered to <strong>@scaleFilter.ToTitleCase()</strong>. To change this filter, please click the button below.
+            </p>
+            <a href="@chapterListUrl" title="Change Development Scale filter" class="btn btn-secondary">Change</a>
+        </div>
+    </div>
+}

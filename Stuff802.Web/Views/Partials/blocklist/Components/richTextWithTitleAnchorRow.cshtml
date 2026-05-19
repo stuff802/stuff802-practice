@@ -1,0 +1,31 @@
+﻿@using System.Text.RegularExpressions
+@inherits UmbracoViewPage<BlockListItem>
+@{
+    var pageModel = Umbraco.AssignedContentItem;
+    var row = (RichTextWithTitleAnchorRow)Model.Content;
+    var contentTitle = row?.Title?.Trim() ?? string.Empty;
+    var anchorName = row?.AnchorName?.Trim() ?? string.Empty;
+    var anchorId = string.Empty;
+
+    if (!string.IsNullOrWhiteSpace(anchorName)&&!string.IsNullOrEmpty(contentTitle))
+    {
+        // Generate anchor ID from anchor name by removing non-alphanumeric characters (except spaces and hyphens) and replacing spaces with hyphens
+        anchorId = Regex.Replace(Regex.Replace(anchorName, @"[^a-zA-Z0-9 -]", ""), @"\s+", "-");
+    }
+}
+
+<div class="container">
+    @if (!string.IsNullOrWhiteSpace(contentTitle))
+    {
+        if (anchorId != string.Empty)
+        {
+            <h3 id="@anchorId">@contentTitle</h3>
+        }
+        else
+        {
+            <h3>@contentTitle</h3>
+        }
+    }
+
+    @row?.Content
+</div>

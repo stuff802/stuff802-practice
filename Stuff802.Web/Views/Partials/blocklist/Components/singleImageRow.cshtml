@@ -1,0 +1,49 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits UmbracoViewPage<BlockListItem>
+@{
+    var row = (SingleImageRow)Model.Content;
+    var settings = (SingleImageRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+    string[] addContainerToDocumentTypes = { "subContentWithLeftNavPage", "topicPage" };
+
+    bool halfWidth = row?.HalfWidth ?? false;
+    string gridLayout = ((row?.ShowDescriptionToTheRightOfImage ?? false) && row.HasValue("description")) ? "col-md-6" : "col-md-12";
+    string documentType = Umbraco.AssignedContentItem.ContentType.Alias;
+    string startElements = addContainerToDocumentTypes.Contains(documentType) ? "<div class=\"container\">" : string.Empty;
+    string endElements = addContainerToDocumentTypes.Contains(documentType) ? "</div>" : string.Empty;
+}
+
+@Html.Raw(startElements)
+@if (!halfWidth)
+{
+    <div class="@gridLayout">
+        <div class="about-image">
+            <img src="@row.Image.MediaUrl()" alt="@row.AltText" class="img-fluid rounded">
+        </div>
+        @if (!string.IsNullOrEmpty(row.Caption))
+        {
+            <p>@row.Caption</p>
+        }
+    </div>
+}
+else
+{
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="about-image">
+            <img src="@row.Image.MediaUrl()" alt="@row.AltText" class="img-fluid rounded">
+        </div>
+        @if (!string.IsNullOrEmpty(row.Caption))
+        {
+            <p>@row.Caption</p>
+        }
+    </div>
+    <div class="col-md-3"></div>
+}
+@if (!row.Description.IsNullOrWhiteSpace())
+{
+    <div class="@gridLayout">
+        @Html.Raw(row.Description)
+    </div>
+}
+@Html.Raw(endElements)

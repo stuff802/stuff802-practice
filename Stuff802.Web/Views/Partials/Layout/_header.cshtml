@@ -1,0 +1,40 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var homePage = Model.Root<Home>() ?? Model?.Parent()?.Siblings<Home>()?.FirstOrDefault() ?? null;
+    var sections = homePage?.Children()?.Where(x => (x.ContentType.Alias == ChapterList.ModelTypeAlias || x.ContentType.Alias == ContentPage.ModelTypeAlias || x.ContentType.Alias == AppendixHome.ModelTypeAlias) && x.IsVisible() && x.IsPublished() && x.Value<bool?>("hideFromNavigation") != true).OrderBy(x => x.SortOrder);
+}
+
+<header id="header" class="header1 d-flex align-items-center">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+        <a href="/" class="logo d-flex align-items-center">
+            <!-- Uncomment the line below if you also wish to use an image logo -->
+            <!-- <img src="assets/img/logo.webp" alt=""> -->
+
+            <div class="h1">Wakefield District Design Code Draft SPD</div>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+            <ul>
+                @if (sections.Count() > 0)
+                {
+                    @foreach (var section in sections)
+                    {
+                        string sectionTitle = !String.IsNullOrWhiteSpace(section.Value<string>("pageTitle")) ? section.Value<string>("pageTitle") : section.Name;
+                        string URL = section.Url();
+                        <li><a href="@URL">@sectionTitle</a></li>
+                    }
+                    <li>
+                        <a role="button" data-bs-toggle="modal" href="#search-modal" title="Search the site"><i class="search-toggle bi bi-search"></i></a>
+                    </li>
+                }
+
+            </ul>
+            <a role="button" data-bs-toggle="modal" href="#search-modal" title="Search the site" class="mobile-search-toggle">
+                <i class="mobile-search-toggle d-xl-none bi bi-search"></i>
+            </a>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+    </div>
+</header>
