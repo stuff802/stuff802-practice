@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Stuff802.Core.Models;
 using Umbraco.Cms.Core.Models.Blocks;
 using Umbraco.Cms.Core.Models.PublishedContent;
@@ -64,10 +65,15 @@ public class GlossaryService : IGlossaryService
             foreach (var block in blockList)
             {
                 var title = block.Content.GetProperty("title")?.GetValue()?.ToString();
-                var anchor = block.Content.GetProperty("anchorName")?.GetValue()?.ToString();
+                var rawAnchor = block.Content.GetProperty("anchorName")?.GetValue()?.ToString();
 
-                if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(anchor))
+                if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(rawAnchor))
                     continue;
+
+                // Apply the same transformation the view uses when rendering anchor IDs
+                var anchor = Regex.Replace(
+                    Regex.Replace(rawAnchor.TrimEnd(), @"[^a-zA-Z0-9 -]", ""),
+                    @"\s+", "-");
 
                 results.Add(new GlossaryEntryDto
                 {
