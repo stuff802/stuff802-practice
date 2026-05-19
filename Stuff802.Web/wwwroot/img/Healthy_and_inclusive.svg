@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: none;
+      }
+
+      .cls-2 {
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 10px;
+      }
+
+      .cls-3 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-4 {
+        fill: #be5835;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-1" x="172.97" y="197.16" width="769.02" height="654.83"/>
+    </clipPath>
+  </defs>
+  <g id="Healthy_inclusive_homes" data-name="Healthy &amp;amp; inclusive homes" >
+    <g id="Layer_15" data-name="Layer 15" >
+      <rect class="cls-4" width="1080" height="1080"/>
+    </g>
+  </g>
+  <g id="Layer_1" data-name="Layer 1" transform="scale(0.55) translate(440.9, 260.5)">
+    <g class="cls-3">
+      <path class="cls-2" d="M225.89,848.13h620.04M711.01,287.42v-45.64h68.73v109.97M538.45,201.02h-.21l-361.41,318.46,43.14,49.05,318.26-280.67,318.48,280.67,43.14-49.05-361.41-318.46ZM498.48,636.25h-121.39M437.79,575.1v122.08M372.87,570.86h130.06v130.57h-130.06v-130.57ZM286.8,561.52v239.91M592.8,845.16v-237.57h110.81v237.57M781.43,845.16v-283.65"/>
+    </g>
+  </g>
+</svg>
