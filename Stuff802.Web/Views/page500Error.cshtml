@@ -1,0 +1,18 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Page500Error>
+@{
+	Layout = "webBase.cshtml";
+    string title = Model?.PageTitle ?? Model.Name;
+}
+<section class="sectioncontentpage text-center mt-5">
+    <div class="container">
+        <div class="container section-title aos-init aos-animate" data-aos="fade-up">
+            <h1>@title</h1>
+        </div>
+        <div class="row mt-5">
+            <div class="col-lg-12">
+				@Model.PageContent
+            </div>
+        </div>
+    </div>
+</section>

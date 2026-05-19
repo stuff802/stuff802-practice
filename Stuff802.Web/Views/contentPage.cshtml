@@ -1,0 +1,15 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentPage>
+@{
+    Layout = "webBase.cshtml";
+    string title = Model.PageTitle ?? string.Empty;
+}
+<section class="sectioncontentpage">
+    @if (!string.IsNullOrWhiteSpace(title))
+    {
+        <div class="container text-center mt-5">
+            <h1>@title</h1>
+        </div>
+    }
+    @Html.GetBlockListHtml(Model.MainContent);
+</section>

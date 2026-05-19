@@ -1,0 +1,79 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
+@using System.Text.RegularExpressions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<SubContentWithLeftNavPage>
+@{
+    Layout = "webBase.cshtml";
+    var parent = Model.Parent;
+    var parentTitle = Model.Parent.Value<string>("pageTitle") ?? Model.Parent.Name;
+    var siblings = Model.SiblingsAndSelf<SubContentWithLeftNavPage>().Where(x => x.Value<bool>("hideFromNavigation") != true).ToArray<IPublishedContent>();
+    (string title, string anchorName)[] contents = Model.MainContent?.AsEnumerable<BlockListItem>()?.Where(x => x.Content.ContentType.Alias == "richTextWithTitleAnchorRow" && (!string.IsNullOrWhiteSpace((x.Content.Value<string>("anchorName") ?? string.Empty).Trim())) && (!string.IsNullOrWhiteSpace((x.Content.Value<string>("title") ?? string.Empty).Trim())))?.Select(x => (x.Content.Value<string>("title"), x.Content.Value<string>("anchorName") ?? string.Empty))?.ToArray() ?? Array.Empty<(string title, string anchorName)>();
+    (string caption, string anchorName)[] tables = Model.MainContent?.AsEnumerable<BlockListItem>()?.Where(x => x.Content.ContentType.Alias == "tableCreateWithCaptionAnchorRow" && (!string.IsNullOrWhiteSpace((x.Content.Value<string>("anchorName") ?? string.Empty).Trim())) && (!string.IsNullOrWhiteSpace((x.Content.Value<string>("caption") ?? string.Empty).Trim())))?.Select(x => (x.Content.Value<string>("caption"), x.Content.Value<string>("anchorName") ?? string.Empty))?.ToArray() ?? Array.Empty<(string caption, string anchorName)>();
+    var a = 1;
+}
+
+<section id="blog-details" class="blog-details section">
+    <div class="container" data-aos="fade-up">
+        <article class="article">
+            <div class="article-wrapper">
+                <aside class="table-of-contents" data-aos="fade-left">
+                    <div class="mb-4">
+                        <a class="leftNavH3Heading" href="@parent.Url()" title="@parentTitle">@parentTitle</a></div>
+                    @if (siblings.Any())
+                    {
+                        <nav>
+                            <ul>
+                                @foreach (var item in siblings)
+                                {
+                                    var title = item.Value<string>("pageTitle") ?? item.Name;
+                                    <li class="@(item.Id == Model.Id ? "active" : "")">
+                                        <a href="@item.Url()" title="@title">
+                                            @title
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    }
+                </aside>
+                <div class="article-content">
+                    <div class="content-section" id="flat-design" data-aos="fade-up">
+                        <h1 class="title-text-padding mb-4">@Model.PageTitle</h1>
+                        <!-- Contents / index -->
+                        @if (contents.Length > 0)
+                        {
+                            <div class="table-of-contents-list ms-2">
+                                <h2>Contents</h2>
+                                <ul>
+                                    @foreach (var content in contents)
+                                    {
+                                        // Remove non-alphanumeric characters for anchor ID (except spaces and hyphens))
+                                        string anchorId = Regex.Replace(Regex.Replace(content.anchorName.TrimEnd(), @"[^a-zA-Z0-9 -]", ""), @"\s+", "-");
+                                        <li><a href="#@anchorId">@content.title</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        @if (tables.Length > 0)
+                        {
+                            <div class="table-of-contents-list ms-2">
+                                <h2>Tables</h2>
+                                <ul>
+                                    @foreach (var table in tables)
+                                    {
+                                        // Remove non-alphanumeric characters for anchor ID (except spaces and hyphens))
+                                        string anchorId = Regex.Replace(Regex.Replace(table.anchorName.TrimEnd(), @"[^a-zA-Z0-9 -]", ""), @"\s+", "-");
+                                        <li><a href="#@anchorId-table-caption">@table.caption</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        @Html.GetBlockListHtml(Model.MainContent)
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+@section Scripts {
+    <script src="~/js/tablecreaterow.js" defer></script>
+}

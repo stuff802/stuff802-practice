@@ -1,0 +1,27 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Home>
+@{
+    Layout = "webBase.cshtml";
+    string title = Model.PageTitle ?? string.Empty;
+}
+<!-- Hero Section -->
+
+<div class="page-title" style="background-image: url(../img/homepage1.jpg); margin-top:0px;">
+    <div class="container position-relative">
+    </div>
+</div>
+<section class="home">
+    @if (!string.IsNullOrWhiteSpace(title))
+    {
+        <div class="container text-center mt-5 mb-3">
+            <h1>@title</h1>
+        </div>
+    }
+
+
+    @Html.GetBlockListHtml(Model.MainContent);
+</section>
+
+@section Scripts {
+    <script src="/js/welcome.js" defer></script>
+}

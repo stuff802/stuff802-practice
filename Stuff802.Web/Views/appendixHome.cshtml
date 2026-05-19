@@ -1,0 +1,47 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+
+@inject IHttpContextAccessor _contextAccessor
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<AppendixHome>
+@{
+    Layout = "webBase.cshtml";
+    var children = Model.Children().Where(x => x.Value<bool>("hideFromNavigation") != true);
+    string title = Model.PageTitle ?? string.Empty;
+}
+<section id="alumni" class="alumni appendixhome section">
+    
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        @if (!string.IsNullOrWhiteSpace(title))
+        {
+            <div class="container text-center mb-4">
+                <h1>@title</h1>
+            </div>
+        }
+        @if (children.Any())
+        {
+            <div class="alumni-engagement" style="padding:0px;">
+                <div class="engagement-cards">
+                    <div class="row">
+                        @foreach (var child in children.OrderBy(x => x.Value<int>("previewOrder")))
+                        {
+                            string childPreviewTitle = !string.IsNullOrWhiteSpace(child.Value<string>("previewTitle")) ? child.Value<string>("previewTitle") : child.Name;
+                            string childPreviewIcon = !string.IsNullOrWhiteSpace(child.Value<string>("previewIconCode")) ? child.Value<string>("previewIconCode") : child.Name;
+                            string childPreviewDescription = !string.IsNullOrWhiteSpace(child.Value<string>("previewShortDescription")) ? child.Value<string>("previewShortDescription") : child.Name;
+
+                            <div class="col-lg-3 col-md-6 mt-3" data-aos="fade-up" data-aos-delay="300">
+                                <a href="@child.Url()">
+                                    <div class="engagement-card">
+                                        <div class="card-icon">
+                                            <i class="@childPreviewIcon"></i>
+                                        </div>
+                                        <span class="leftNavH3Heading">@childPreviewTitle</span>
+                                        <p>@childPreviewDescription</p>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section><!-- /Alumni Section -->

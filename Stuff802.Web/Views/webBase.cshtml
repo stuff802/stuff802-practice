@@ -1,0 +1,95 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@inject IHttpContextAccessor _contextAccessor
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>@(Umbraco.AssignedContentItem.Value("pageTitle") ?? @Model.Name)</title>
+    <meta name="description" content="@Model.Value("metaDescription")" />
+    <meta name="keywords" content="Wakefield,District,Design,Code">
+    <meta name="google-site-verification" content="Bo4ZJCX4OjcGwKIDDWx0CMzuhLgCc9KqwHKU499gy68" />
+    <meta name="pageId" content="@Model.Id">
+
+    <!-- Favicons -->
+    <link href="~/img/favicon.png" rel="icon">
+    <link href="~/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="~/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="~/css/main.css" rel="stylesheet">
+</head>
+
+<body class="starter-page-page">
+    <partial name="/Views/Partials/Layout/_header.cshtml" />
+    <main class="main">
+        @RenderBody()
+    </main>
+
+    <partial name="/Views/Partials/Layout/_footer.cshtml" />
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center" title="Back to top">
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z" />
+        </svg>
+        Back to top
+    </a>
+
+    <!-- Preloader -->
+    <div id="preloader"></div>
+
+    <!-- Vendor JS Files -->
+    <script src="~/vendor/jquery/jquery-3.7.1.min.js" defer></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+    <script src="~/vendor/aos/aos.js" defer></script>
+    <script src="~/vendor/purecounter/purecounter_vanilla.js" defer></script>
+    <script src="~/vendor/imagesloaded/imagesloaded.pkgd.min.js" defer></script>
+    <script src="~/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
+    <script src="~/vendor/swiper/swiper-bundle.min.js" defer></script>
+    <script src="~/vendor/glightbox/js/glightbox.min.js" type="text/javascript" defer></script>
+    @* https://github.com/francoischalifour/medium-zoom *@
+    <script src="~/js/mediumZoom.js" type="text/javascript" defer></script>
+    <!-- Main JS File -->
+    <script src="~/js/main.js" asp-append-version="true" defer></script>
+    <script src="~/js/search.js" asp-append-version="true" defer></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PFH5FPKQMN"></script>
+    <script src="https://cc.cdn.civiccomputing.com/9/cookieControl-9.x.min.js" integrity="sha256-l+byNOqXRevb5OdQHM4K9/hN2QoYx+lfZ5ZDeG88yWQ=" crossorigin="anonymous"></script>
+    <script src="/js/cookie-consent.js" asp-append-version="true" defer></script>
+    
+   
+    @RenderSection("Scripts", false)
+
+    <!-- *** Search modal window *** -->
+    <div class="modal fade" id="search-modal" tabindex="-1" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form action="" class="form-search">
+                        <div class="form-group d-flex align-items-stretch">
+                            <input id="searchTerm" type="search" name="search" class="form-control search-input-text me-1" placeholder="Search the site" aria-label="Search terms">
+                            <button type="submit" id="btnSubmit" class="btn btn-dark c-search_submit" value="Search" aria-label="Search"><i class="bi bi-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

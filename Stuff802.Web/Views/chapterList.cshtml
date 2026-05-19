@@ -1,0 +1,114 @@
+﻿@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Web.Common.PublishedModels
+@using Stuff802.Core.Helpers
+@inject IHttpContextAccessor _contextAccessor
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ChapterList>
+@{
+    Layout = "webBase.cshtml";
+    HttpContext? _context = _contextAccessor?.HttpContext ?? null;
+
+    var scaleFilter = _context?.Session?.GetScaleFilter<string>("scaleFilter") ?? "";
+
+    string[] scaleFilters = ["householder applications", "minor residential applications (1-9 homes)", "major residential applications (10+ homes)", "minor employment applications", "major employment applications", "other major applications"];
+    string[] areaIcons = ["bi-house-heart", "bi-house-add", "bi-houses-fill", "bi-building-fill", "bi-buildings-fill", "bi-card-list"];
+
+    var children = Model.Children<ChapterPage>().Where(x => x.Value<bool>("hideFromNavigation") != true && (scaleFilter.IsNullOrWhiteSpace() || x.DescendantsOrSelf<DesignCode>().Any(y => y.Value<IEnumerable<string>>("developmentScales") != null && y.Value<IEnumerable<string>>("developmentScales").Contains(scaleFilter, StringComparer.OrdinalIgnoreCase)))).OrderBy(z => z.SortOrder);
+    string title = Model.PageTitle ?? string.Empty;
+}
+<section id="news-posts" class="news-posts section gy-4">
+    @if (!string.IsNullOrWhiteSpace(title))
+    {
+        <div class="container text-center mb-5">
+            <h1>@title</h1>
+        </div>
+    }
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-4">
+            <div class="col-lg-12 text-center mb-4">
+                <p>Select your development scale and type to filter to the relevant sections:</p>
+                <div class="d-flex justify-content-center" id="codeFilter">
+                    @for (int i = 0; i < scaleFilters.Length; i++)
+                    {
+                        var code = scaleFilters[i];
+                        var icon = areaIcons[i];
+                        var selected = (!string.IsNullOrWhiteSpace(scaleFilter) && scaleFilter == code) ? "active" : "";
+
+                        <div class="icon-box @selected" title="@code.ToTitleCase()" data-area="@code">
+                            <i class="bi @icon"></i>
+                        </div>
+                    }
+                </div>
+                @if (!scaleFilter.IsNullOrWhiteSpace())
+                {
+                    <p>Click on the chosen filter to clear or choose another</p>
+                }
+            </div>
+        </div>
+        <div class="row gy-4">
+
+            @if (children.Any())
+            {
+                @foreach (var child in children.OrderBy(x => x.Value<int>("previewOrder")))
+                {
+                    string parentBckColorScheme = "";
+                    string svgImage = "";
+                    string childTitle = !string.IsNullOrWhiteSpace(child.Value<string>("previewTitle")) ? child.Value<string>("previewTitle") : child.Name;
+                    @* string childImageAltText = !string.IsNullOrWhiteSpace(child.Value<string>("previewImageAltText")) ? child.Value<string>("previewImageAltText") : childTitle;
+                    string previewImageUrl = child.HasValue("previewImage") ? child.Value<MediaWithCrops>("previewImage").MediaUrl() : "#"; *@
+                    string schema = !string.IsNullOrWhiteSpace(child.Value<string>("PickChapterSchema")) ? child.Value<string>("PickChapterSchema").ToLower() : child.Name;
+                    switch (schema)
+                    {
+                        case "strengthening character and context (purple)":
+                            parentBckColorScheme = "#955ba3";
+                            svgImage = "Strengthening.svg";
+                            break;
+                        case "sustainable and resilient places (green)":
+                            parentBckColorScheme = "#207a72";
+                            svgImage = "Sustainable.svg";
+                            break;
+                        case "welcoming places (pink)":
+                            parentBckColorScheme = "#a30c46";
+                            svgImage = "Welcoming.svg";
+                            break;
+                        case "streets for people (blue)":
+                            parentBckColorScheme = "#005387";
+                            svgImage = "Streetsforpeople-02.svg";
+                            break;
+                        case "healthy and inclusive homes (orange)":
+                            parentBckColorScheme = "#be5835";
+                            svgImage = "Healthy_and_inclusive.svg";
+                            break;
+                        case "attractive places to work (gold)":
+                            parentBckColorScheme = "#8e7311";
+                            svgImage = "Attractive_places_to_work.svg";
+                            break;
+                        default:
+                            parentBckColorScheme = string.Empty;
+                            break;
+                    }
+                    <div class="col-lg-4">
+                        @* d-flex justify-content-center *@
+                        <a href="@child.Url()">
+                            <article>
+                                <div class="post-img position-relative">
+                                    <img src="~/img/@svgImage" alt="@svgImage" class="img-fluid d-block mx-auto" loading="lazy">
+                                    <div class="post-content">
+                                        <h2 class="title">
+                                            @childTitle.ToTitleCase()
+                                        </h2>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/developmentScaleFilter.js" defer></script>
+}
