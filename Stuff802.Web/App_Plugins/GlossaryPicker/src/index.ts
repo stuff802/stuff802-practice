@@ -11,9 +11,9 @@ export default class GlossaryPickerToolbarApi extends UmbTiptapToolbarElementApi
     override async execute(editor?: any) {
         if (!editor) return;
 
-        // Capture selection BEFORE the editor loses focus
+        // Capture selection and selected text BEFORE anything async
         const { from, to } = editor.state.selection;
-        editor.chain().focus().run();
+        const selectedText = from !== to ? editor.state.doc.textBetween(from, to) : '';
 
         const response = await fetch('/umbraco/api/glossary/entries');
         if (!response.ok) return;
@@ -23,12 +23,16 @@ export default class GlossaryPickerToolbarApi extends UmbTiptapToolbarElementApi
         if (!entry) return;
 
         const href = entry.anchor ? `${entry.url}#${entry.anchor}` : entry.url;
+        const linkHtml = `<a href="${href}">${selectedText || entry.title}</a>`;
 
-        if (from !== to) {
-            // Restore the selection, then wrap it with a link
-            editor.chain().focus().setTextSelection({ from, to }).setLink({ href }).run();
+        if (selectedText) {
+            // Replace the selected range with the linked version of the same text
+            editor.chain().focus()
+                .setTextSelection({ from, to })
+                .insertContent(linkHtml)
+                .run();
         } else {
-            editor.chain().focus().insertContent(`<a href="${href}">${entry.title}</a>`).run();
+            editor.chain().focus().insertContent(linkHtml).run();
         }
     }
 
