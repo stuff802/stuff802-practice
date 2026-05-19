@@ -1,0 +1,33 @@
+@inherits UmbracoViewPage<BlockListItem>
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    var row = (LeftSideNavigationItemRow)Model.Content;
+    var settings = (LeftSideNavigationItemRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+}
+<div class="container left-nav-item-row">
+    @foreach (var item in row.LeftSideNavigationItems ?? Enumerable.Empty<BlockListItem>())
+    {
+        var navItem = (LeftSideNavigationItem)item.Content;
+        var itemSettings = item.Settings as LeftSideNavigationItemSettings;
+        if (itemSettings?.Hide ?? false) { continue; }
+        string title = navItem.Title ?? string.Empty;
+        <div class="left-nav-item mb-4">
+            @if (!string.IsNullOrWhiteSpace(title))
+            {
+                <h3>@title</h3>
+            }
+            @if (navItem.ImagePicker != null)
+            {
+                <img src="@navItem.ImagePicker.Url()"
+                     alt="@(navItem.ImageAltText ?? string.Empty)"
+                     class="img-fluid mb-2" />
+                @if (!string.IsNullOrWhiteSpace(navItem.ImageCaption))
+                {
+                    <p class="image-caption">@navItem.ImageCaption</p>
+                }
+            }
+            @navItem.Content
+        </div>
+    }
+</div>

@@ -34,7 +34,7 @@ namespace Stuff802.Web.Controllers.Render
             if (string.IsNullOrEmpty(query))
             {
                 var searchPage = new SearchPage(CurrentPage, _publishedValueFallback);
-                return View(new SearchResultsModel(searchPage, _publishedValueFallback));
+                return View("~/Views/searchPage.cshtml", new SearchResultsModel(searchPage, _publishedValueFallback));
             }
             else
                 return SearchResults(query, page);

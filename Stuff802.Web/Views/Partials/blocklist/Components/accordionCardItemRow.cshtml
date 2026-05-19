@@ -1,0 +1,49 @@
+@inherits UmbracoViewPage<BlockListItem>
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    var row = (AccordionCardItemRow)Model.Content;
+    var settings = (AccordionCardItemRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) { return; }
+    var accordionId = "accordion-" + Guid.NewGuid().ToString("N")[..8];
+}
+<div class="container">
+    <div class="accordion" id="@accordionId">
+        @{int index = 0;}
+        @foreach (var item in row.AccordionItems ?? Enumerable.Empty<BlockListItem>())
+        {
+            var accordionItem = (AccordionCardItem)item.Content;
+            var itemSettings = item.Settings as AccordionCardItemSettings;
+            if (itemSettings?.Hide ?? false) { continue; }
+            var itemId = accordionId + "-item-" + index;
+            var collapseId = accordionId + "-collapse-" + index;
+            bool isFirst = index == 0;
+            string title = accordionItem.Title ?? string.Empty;
+            index++;
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="@itemId">
+                    <button class="accordion-button @(isFirst ? "" : "collapsed")" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#@collapseId"
+                            aria-expanded="@(isFirst ? "true" : "false")" aria-controls="@collapseId">
+                        @title
+                    </button>
+                </h2>
+                <div id="@collapseId" class="accordion-collapse collapse @(isFirst ? "show" : "")"
+                     aria-labelledby="@itemId" data-bs-parent="#@accordionId">
+                    <div class="accordion-body">
+                        @if (accordionItem.SingleImage != null)
+                        {
+                            <img src="@accordionItem.SingleImage.Url()"
+                                 alt="@(accordionItem.SingleImageAltText ?? string.Empty)"
+                                 class="img-fluid mb-3" />
+                            @if (!string.IsNullOrWhiteSpace(accordionItem.SingleImageCaption))
+                            {
+                                <p class="image-caption">@accordionItem.SingleImageCaption</p>
+                            }
+                        }
+                        @accordionItem.Content
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
