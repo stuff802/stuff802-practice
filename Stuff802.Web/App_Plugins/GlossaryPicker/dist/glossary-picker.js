@@ -3,13 +3,17 @@ import { UmbTiptapToolbarElementApiBase as e } from "@umbraco-cms/backoffice/tip
 var t = class extends e {
 	async execute(e) {
 		if (!e) return;
+		let { from: t, to: n } = e.state.selection;
 		e.chain().focus().run();
-		let t = await fetch("/umbraco/api/glossary/entries");
-		if (!t.ok) return;
-		let n = await t.json(), r = await this._showPicker(n);
-		if (!r) return;
-		let i = r.anchor ? `${r.url}#${r.anchor}` : r.url, { from: a, to: o } = e.state.selection;
-		a === o ? e.chain().focus().insertContent(`<a href="${i}">${r.title}</a>`).run() : e.chain().focus().setLink({ href: i }).run();
+		let r = await fetch("/umbraco/api/glossary/entries");
+		if (!r.ok) return;
+		let i = await r.json(), a = await this._showPicker(i);
+		if (!a) return;
+		let o = a.anchor ? `${a.url}#${a.anchor}` : a.url;
+		t === n ? e.chain().focus().insertContent(`<a href="${o}">${a.title}</a>`).run() : e.chain().focus().setTextSelection({
+			from: t,
+			to: n
+		}).setLink({ href: o }).run();
 	}
 	_showPicker(e) {
 		return new Promise((t) => {
