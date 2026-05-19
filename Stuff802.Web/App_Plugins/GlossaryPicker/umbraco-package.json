@@ -15,6 +15,13 @@
                 "icon": "icon-book-alt",
                 "label": "Glossary Link"
             }
+        },
+        {
+            "type": "modal",
+            "alias": "Stuff802.Modal.GlossaryPicker",
+            "name": "Glossary Picker Modal",
+            "js": "/App_Plugins/GlossaryPicker/dist/glossary-picker.js",
+            "element": "glossary-picker-modal"
         }
     ]
 }
