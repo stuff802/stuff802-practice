@@ -37,6 +37,11 @@ public class NavigationTests(BrowserFixture fixture)
         var page = await fixture.Browser.NewPageAsync();
         await page.GotoAsync(BrowserFixture.BaseUrl);
 
+        // Dismiss any open modal (e.g. cookie/welcome dialogs)
+        var modal = page.Locator("[role='dialog'].show");
+        if (await modal.CountAsync() > 0)
+            await page.Keyboard.PressAsync("Escape");
+
         var chapterLink = page.Locator("a[href*='chapter']").First;
         if (await chapterLink.CountAsync() == 0)
         {
@@ -45,7 +50,6 @@ public class NavigationTests(BrowserFixture fixture)
         }
 
         await chapterLink.ClickAsync();
-        var response = page.Context.Pages.Last();
         (await page.TitleAsync()).Should().NotBeNullOrEmpty();
         await page.CloseAsync();
     }
