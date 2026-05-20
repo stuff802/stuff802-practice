@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Stuff802.Core.Interfaces;
-using Umbraco.Cms.Web.Common.Controllers;
 
 namespace Stuff802.Web.Controllers.Api;
 
-public class GlossaryController : UmbracoApiController
+[ApiController]
+[Route("umbraco/api/glossary")]
+public class GlossaryController : ControllerBase
 {
     private readonly IGlossaryService _glossaryService;
 
@@ -13,7 +14,7 @@ public class GlossaryController : UmbracoApiController
         _glossaryService = glossaryService;
     }
 
-    [HttpGet]
+    [HttpGet("entries")]
     public IActionResult Entries()
     {
         return Ok(_glossaryService.GetGlossaryEntries());
