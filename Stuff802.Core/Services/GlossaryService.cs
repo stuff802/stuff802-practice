@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+using Stuff802.Core.Helpers;
 using Stuff802.Core.Models;
 using Umbraco.Cms.Core.Models.Blocks;
 using Umbraco.Cms.Core.Models.PublishedContent;
@@ -70,10 +70,7 @@ public class GlossaryService : IGlossaryService
                 if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(rawAnchor))
                     continue;
 
-                // Apply the same transformation the view uses when rendering anchor IDs
-                var anchor = Regex.Replace(
-                    Regex.Replace(rawAnchor.TrimEnd(), @"[^a-zA-Z0-9 -]", ""),
-                    @"\s+", "-");
+                var anchor = AnchorHelper.ToAnchorId(rawAnchor);
 
                 results.Add(new GlossaryEntryDto
                 {

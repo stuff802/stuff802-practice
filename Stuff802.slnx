@@ -2,4 +2,5 @@
   <Project Path="Stuff802.Core/Stuff802.Core.csproj" />
   <Project Path="Stuff802.Models/Stuff802.Models.csproj" />
   <Project Path="Stuff802.Web/Stuff802.Web.csproj" />
+  <Project Path="Stuff802.Tests/Stuff802.Tests.csproj" />
 </Solution>
